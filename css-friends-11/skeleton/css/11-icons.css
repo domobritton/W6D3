@@ -1,0 +1,37 @@
+/* PHASE 11: Icons */
+[class*="icon-"] {
+  background-image: url('../images/sprite.png');
+  background-size: 25px;
+  display: inline-block;
+  height: 25px;
+  width: 25px;
+  /* margin-top: 5px; */
+  /* overflow: hidden; */
+}
+
+
+.icon-comment {
+  
+}
+
+.icon-reblog {
+  
+}
+
+.icon-favorite {
+  
+}
+
+.icon-small-wall {
+  
+}
+.icon-small-about {
+  
+}
+.icon-small-friends {
+  
+}
+.icon-small-photos {
+  
+}
+
