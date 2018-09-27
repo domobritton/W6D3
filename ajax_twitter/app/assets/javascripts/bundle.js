@@ -118,6 +118,20 @@ const APIUtil = {
       }, 
       dataType: 'JSON'
     });
+  },
+  
+  searchUsers(queryVal, success) {
+    $.ajax ({
+      url: '/users/search',
+      method: 'GET',
+      data: {
+        users: {
+          username: queryVal
+        }
+      },
+      dataType: 'JSON', 
+      success: success
+    });
   }
 };
 
@@ -147,36 +161,37 @@ class FollowToggle {
     e.preventDefault();
   
     if (this.followState === false) {
+      this.followState = 'following...';
+      this.render();
       APIUtil.followUser(this.userId)
         .then(() => {
           this.followState = true;
           this.render();
         });
     } else {
+      this.followState = 'unfollowing...'; 
+      this.render();
       APIUtil.unfollowUser(this.userId)
         .then(() => {
           this.followState = false;
           this.render();
         });
     }
-    // console.log(ajaxMethod);
-    // $.ajax ({
-    //   url: `/users/${this.userId}/follow`,
-    //   method: ajaxMethod,
-    //   data: {
-    //     follows: {
-    //       followee_id: this.userId
-    //     }
-    //   }, 
-    //   dataType: 'JSON'
-    // });
   }
   
   render() {
-    if (this.followState === false) {
+    if (this.followState === 'following...') {
+      this.el.html('following...');
+      this.el.prop("disabled", true);
+    } else if (this.followState === 'unfollowing...') {
+      this.el.html('unfollowing...');
+      this.el.prop("disabled", true);
+    } else if (this.followState === false) {
       this.el.html('Follow');
+      this.el.prop("disabled", false);
     } else {
       this.el.html('Unfollow!');
+      this.el.prop("disabled", false);
     }
   }
 }
@@ -193,12 +208,42 @@ module.exports = FollowToggle;
 /***/ (function(module, exports, __webpack_require__) {
 
 const FollowToggle = __webpack_require__(/*! ./follow_toggle.js */ "./frontend/follow_toggle.js");
+const UsersSearch = __webpack_require__(/*! ./users_search.js */ "./frontend/users_search.js");
 
 $(() => {
   $('button.follow-toggle').each((idx, el) => {
     new FollowToggle(el);
   });
+  $('nav.users-search').each((idx, searchEl) => {
+    new UsersSearch(searchEl);
+  });
 });
+
+/***/ }),
+
+/***/ "./frontend/users_search.js":
+/*!**********************************!*\
+  !*** ./frontend/users_search.js ***!
+  \**********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+const APIUtil = __webpack_require__(/*! ./api_util.js */ "./frontend/api_util.js");
+
+class UsersSearch {
+  constructor(el) {
+    this.el = $(el);
+    this.input = this.el.find('input');
+    this.ul = this.el.find('ul');
+    this.input.on('keyup', this.handleInput.bind(this));
+  }
+  
+  handleInput(e) {
+    console.log(e.currentTarget.value);
+  }
+}
+
+module.exports = UsersSearch;
 
 /***/ })
 

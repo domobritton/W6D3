@@ -13,36 +13,37 @@ class FollowToggle {
     e.preventDefault();
   
     if (this.followState === false) {
+      this.followState = 'following...';
+      this.render();
       APIUtil.followUser(this.userId)
         .then(() => {
           this.followState = true;
           this.render();
         });
     } else {
+      this.followState = 'unfollowing...'; 
+      this.render();
       APIUtil.unfollowUser(this.userId)
         .then(() => {
           this.followState = false;
           this.render();
         });
     }
-    // console.log(ajaxMethod);
-    // $.ajax ({
-    //   url: `/users/${this.userId}/follow`,
-    //   method: ajaxMethod,
-    //   data: {
-    //     follows: {
-    //       followee_id: this.userId
-    //     }
-    //   }, 
-    //   dataType: 'JSON'
-    // });
   }
   
   render() {
-    if (this.followState === false) {
+    if (this.followState === 'following...') {
+      this.el.html('following...');
+      this.el.prop("disabled", true);
+    } else if (this.followState === 'unfollowing...') {
+      this.el.html('unfollowing...');
+      this.el.prop("disabled", true);
+    } else if (this.followState === false) {
       this.el.html('Follow');
+      this.el.prop("disabled", false);
     } else {
       this.el.html('Unfollow!');
+      this.el.prop("disabled", false);
     }
   }
 }
